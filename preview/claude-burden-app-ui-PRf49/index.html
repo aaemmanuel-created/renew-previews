@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="RENEW — Burden" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Burden" />
+    <title>Burden — RENEW</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      :root {
+        --bg: #000;
+        --fg: #fff;
+        --muted: rgba(255,255,255,0.55);
+        --glass-bg: rgba(255,255,255,0.06);
+        --glass-border: rgba(255,255,255,0.14);
+        --glass-highlight: rgba(255,255,255,0.22);
+        --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        overscroll-behavior: none;
+        touch-action: manipulation;
+      }
+      #app {
+        position: fixed;
+        inset: 0;
+        height: 100dvh;
+        background: radial-gradient(ellipse at top, #0a0a0d 0%, #000 60%);
+        overflow: hidden;
+      }
+
+      /* ---------- screen system ---------- */
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 360ms ease;
+      }
+      .screen.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* ---------- screen 1: thank you ---------- */
+      #screen-intro {
+        align-items: center;
+        justify-content: center;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      #intro-text {
+        font-size: clamp(1.6rem, 6.2vw, 2.4rem);
+        font-weight: 300;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        color: #fff;
+        opacity: 0;
+        filter: blur(18px);
+        transform: translateY(8px);
+        max-width: 22ch;
+        transition: opacity 2200ms cubic-bezier(0.22, 1, 0.36, 1),
+                    filter 2200ms cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 2200ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      #intro-text.in {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+      #intro-hint {
+        position: absolute;
+        bottom: max(2rem, env(safe-area-inset-bottom));
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        opacity: 0;
+        transition: opacity 700ms ease 2400ms;
+      }
+      #intro-text.in ~ #intro-hint { opacity: 1; }
+
+      /* ---------- screen 2: menu ---------- */
+      #screen-menu {
+        padding: max(3rem, env(safe-area-inset-top)) 1.5rem max(2rem, env(safe-area-inset-bottom));
+        justify-content: space-between;
+      }
+      .menu-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .menu-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .menu-title {
+        font-size: 1.4rem;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+      .menu-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-top: 2rem;
+      }
+      .menu-item {
+        position: relative;
+        background: transparent;
+        border: none;
+        color: var(--fg);
+        text-align: left;
+        padding: 1.6rem 0.4rem;
+        font-family: var(--font-sans);
+        font-size: clamp(2.2rem, 9.5vw, 3.4rem);
+        font-weight: 500;
+        letter-spacing: -0.015em;
+        line-height: 1;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        transition: transform 220ms ease, opacity 220ms ease;
+      }
+      .menu-item:active { transform: scale(0.985); opacity: 0.85; }
+      .menu-item .menu-index {
+        position: absolute;
+        right: 0.4rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        color: var(--muted);
+      }
+      .menu-footer {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      /* ---------- secondary header used by sub-screens ---------- */
+      .sub-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: max(1.2rem, env(safe-area-inset-top)) 1rem 0.8rem;
+        z-index: 5;
+      }
+      .back-btn {
+        background: transparent;
+        border: none;
+        color: var(--fg);
+        padding: 0.6rem 0.8rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .sub-title {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .sub-spacer { width: 4.5rem; }
+
+      /* ---------- screen 3: burden deck ---------- */
+      #screen-burden { background: #000; }
+      .void {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .void::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 30% 20%, rgba(120,120,255,0.06), transparent 45%),
+          radial-gradient(circle at 75% 85%, rgba(255,200,150,0.04), transparent 50%);
+        pointer-events: none;
+      }
+      .deck {
+        position: relative;
+        width: min(86vw, 360px);
+        height: min(62vh, 520px);
+      }
+      .tile {
+        position: absolute;
+        inset: 0;
+        border-radius: 28px;
+        padding: 1.6rem 1.4rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 100%);
+        border: 1px solid var(--glass-border);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 30px 60px -20px rgba(0,0,0,0.8),
+          0 0 0 1px rgba(255,255,255,0.02);
+        backdrop-filter: blur(22px) saturate(140%);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+        color: var(--fg);
+        transform-origin: center bottom;
+        will-change: transform, opacity;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .tile::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.12), transparent 60%);
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+      .tile-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .tile-name {
+        margin-top: 0.4rem;
+        font-size: 1.3rem;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+      }
+      .tile-body {
+        margin-top: 1rem;
+        font-size: 1rem;
+        line-height: 1.45;
+        color: rgba(255,255,255,0.86);
+        flex: 1;
+        overflow: hidden;
+      }
+      .tile-meta {
+        margin-top: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .tile-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.6rem;
+        justify-content: center;
+      }
+      .pill {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--glass-border);
+        color: var(--fg);
+      }
+      .swipe-tag {
+        position: absolute;
+        top: 1.2rem;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.7rem;
+        border-radius: 8px;
+        border: 1.5px solid currentColor;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .swipe-tag.left { left: 1rem; color: #ff7a7a; transform: rotate(-12deg); }
+      .swipe-tag.right { right: 1rem; color: #7affb0; transform: rotate(12deg); }
+      .deck-hint {
+        position: absolute;
+        bottom: max(1.5rem, env(safe-area-inset-bottom));
+        left: 0; right: 0;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .empty {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.8;
+      }
+
+      /* ---------- generic sub screens ---------- */
+      .placeholder {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+      }
+      .placeholder p {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--muted);
+        max-width: 28ch;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Screen 1: intro fade-in -->
+      <section id="screen-intro" class="screen active">
+        <h1 id="intro-text">Thank you for supporting a burden today</h1>
+        <span id="intro-hint">Tap to continue</span>
+      </section>
+
+      <!-- Screen 2: menu -->
+      <section id="screen-menu" class="screen">
+        <div>
+          <div class="menu-header">
+            <span class="menu-eyebrow">RENEW</span>
+            <span class="menu-title">Welcome back</span>
+          </div>
+          <div class="menu-list">
+            <button class="menu-item" data-go="weekly">
+              Burden of the Week
+              <span class="menu-index">01</span>
+            </button>
+            <button class="menu-item" data-go="burden">
+              Burden
+              <span class="menu-index">02</span>
+            </button>
+            <button class="menu-item" data-go="spree">
+              Spree
+              <span class="menu-index">03</span>
+            </button>
+          </div>
+        </div>
+        <div class="menu-footer">Speak the Word · Joshua 1:8</div>
+      </section>
+
+      <!-- Screen 3a: burden deck -->
+      <section id="screen-burden" class="screen">
+        <div class="sub-header">
+          <button class="back-btn" data-go="menu">&larr; Back</button>
+          <span class="sub-title">Burden</span>
+          <span class="sub-spacer"></span>
+        </div>
+        <div class="void">
+          <div class="deck" id="deck"></div>
+          <div class="deck-hint">Swipe · Tap to read</div>
+        </div>
+      </section>
+
+      <!-- Screen 3b: weekly placeholder -->
+      <section id="screen-weekly" class="screen">
+        <div class="sub-header">
+          <button class="back-btn" data-go="menu">&larr; Back</button>
+          <span class="sub-title">Burden of the Week</span>
+          <span class="sub-spacer"></span>
+        </div>
+        <div class="placeholder">
+          <p>This week's collective burden will surface here.</p>
+        </div>
+      </section>
+
+      <!-- Screen 3c: spree placeholder -->
+      <section id="screen-spree" class="screen">
+        <div class="sub-header">
+          <button class="back-btn" data-go="menu">&larr; Back</button>
+          <span class="sub-title">Spree</span>
+          <span class="sub-spacer"></span>
+        </div>
+        <div class="placeholder">
+          <p>Spree mode coming soon.</p>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // ---------- haptics ----------
+      const canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
+      function vibrate(pattern) {
+        if (!canVibrate) return;
+        try { navigator.vibrate(pattern); } catch (_) {}
+      }
+
+      // Pulse that intensifies in lockstep with the text fade-in (~2.2s).
+      // Each pulse is longer + each gap is shorter than the previous.
+      function runIntroHaptics() {
+        if (!canVibrate) return;
+        const pattern = [
+          40, 220,
+          55, 200,
+          75, 170,
+          100, 140,
+          130, 110,
+          170, 80,
+          220
+        ];
+        vibrate(pattern);
+      }
+
+      // ---------- screen routing ----------
+      const screens = {
+        intro:   document.getElementById("screen-intro"),
+        menu:    document.getElementById("screen-menu"),
+        burden:  document.getElementById("screen-burden"),
+        weekly:  document.getElementById("screen-weekly"),
+        spree:   document.getElementById("screen-spree"),
+      };
+      function show(name) {
+        Object.entries(screens).forEach(([key, el]) => {
+          el.classList.toggle("active", key === name);
+        });
+        if (name === "burden") buildDeck();
+      }
+      document.querySelectorAll("[data-go]").forEach((el) => {
+        el.addEventListener("click", () => {
+          vibrate(12);
+          show(el.dataset.go);
+        });
+      });
+
+      // ---------- intro fade-in ----------
+      const introText = document.getElementById("intro-text");
+      const introScreen = document.getElementById("screen-intro");
+      // Kick off the fade + pulse on the next frame so the transition runs.
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          introText.classList.add("in");
+          runIntroHaptics();
+        }, 250);
+      });
+      // Tap intro to advance.
+      introScreen.addEventListener("click", () => {
+        if (!introText.classList.contains("in")) return;
+        vibrate(20);
+        show("menu");
+      });
+
+      // ---------- burden deck ----------
+      const BURDENS = [
+        {
+          name: "Maya",
+          weight: "Grief",
+          body: "Lost her mother last month. Carrying the quiet weight of being the one who has to hold the family together.",
+          asked: "Pray for rest, and that joy finds its way back in small moments.",
+        },
+        {
+          name: "Daniel",
+          weight: "Provision",
+          body: "Out of work for six weeks. Two kids at home, rent due Friday. Faith feels thin some mornings.",
+          asked: "Pray for the right door to open — and the courage to walk through it.",
+        },
+        {
+          name: "Imani",
+          weight: "Healing",
+          body: "Test results back next Tuesday. She is choosing peace, but the waiting is the hardest part.",
+          asked: "Pray for a clean report, and for stillness inside the unknown.",
+        },
+        {
+          name: "Marcus",
+          weight: "Marriage",
+          body: "He and his wife are sleeping in different rooms again. Trying to remember what brought them together.",
+          asked: "Pray for soft words, and for love to find its way back.",
+        },
+        {
+          name: "Sade",
+          weight: "Direction",
+          body: "Senior year. Everyone has a plan except her. She is praying for clarity, not just options.",
+          asked: "Pray that the right path makes itself known — and that she trusts it.",
+        },
+      ];
+
+      const deck = document.getElementById("deck");
+      let deckBuilt = false;
+
+      function buildDeck() {
+        if (deckBuilt) return;
+        deckBuilt = true;
+        deck.innerHTML = "";
+        // Render in reverse so the first burden ends up on top of the stack.
+        BURDENS.slice().reverse().forEach((b, idx) => {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.innerHTML = `
+            <div class="swipe-tag left">Pass</div>
+            <div class="swipe-tag right">Pray</div>
+            <span class="tile-eyebrow">${b.weight}</span>
+            <h2 class="tile-name">${b.name}</h2>
+            <div class="tile-body">
+              <p>${b.body}</p>
+              <p style="margin-top:0.8rem;color:var(--muted);font-size:0.92rem;">${b.asked}</p>
+            </div>
+            <div class="tile-meta">
+              <span>Anonymous</span>
+              <span>Burden</span>
+            </div>
+            <div class="tile-actions">
+              <span class="pill">Hold</span>
+              <span class="pill">Pray</span>
+            </div>
+          `;
+          deck.appendChild(tile);
+          attachSwipe(tile);
+        });
+        layoutStack();
+      }
+
+      function layoutStack() {
+        const tiles = Array.from(deck.querySelectorAll(".tile"));
+        // Topmost is the LAST child (rendered last → on top in stacking order).
+        tiles.forEach((t, i) => {
+          const depth = (tiles.length - 1) - i; // 0 for top, larger as you go down
+          t.style.transform = `translateY(${depth * 10}px) scale(${1 - depth * 0.04})`;
+          t.style.opacity = depth > 2 ? 0 : 1;
+          t.style.zIndex = i;
+          t.style.pointerEvents = depth === 0 ? "auto" : "none";
+        });
+        if (tiles.length === 0) {
+          deck.innerHTML = `<div class="empty">No burdens left.<br/>Come back tomorrow.</div>`;
+        }
+      }
+
+      function attachSwipe(tile) {
+        let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false, pointerId = null;
+        const leftTag = tile.querySelector(".swipe-tag.left");
+        const rightTag = tile.querySelector(".swipe-tag.right");
+
+        const onDown = (e) => {
+          // Only allow swipe on the top tile.
+          const tiles = Array.from(deck.querySelectorAll(".tile"));
+          if (tiles[tiles.length - 1] !== tile) return;
+          dragging = true;
+          pointerId = e.pointerId;
+          startX = e.clientX; startY = e.clientY;
+          tile.setPointerCapture?.(pointerId);
+          tile.style.transition = "none";
+          vibrate(8);
+        };
+        const onMove = (e) => {
+          if (!dragging || e.pointerId !== pointerId) return;
+          dx = e.clientX - startX;
+          dy = e.clientY - startY;
+          const rot = dx / 18;
+          tile.style.transform = `translate(${dx}px, ${dy * 0.4}px) rotate(${rot}deg)`;
+          const mag = Math.min(Math.abs(dx) / 120, 1);
+          if (dx > 0) { rightTag.style.opacity = mag; leftTag.style.opacity = 0; }
+          else if (dx < 0) { leftTag.style.opacity = mag; rightTag.style.opacity = 0; }
+          else { leftTag.style.opacity = 0; rightTag.style.opacity = 0; }
+        };
+        const onUp = (e) => {
+          if (!dragging || e.pointerId !== pointerId) return;
+          dragging = false;
+          tile.releasePointerCapture?.(pointerId);
+          const threshold = 110;
+          tile.style.transition = "transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease";
+          if (Math.abs(dx) > threshold) {
+            const dir = dx > 0 ? 1 : -1;
+            tile.style.transform = `translate(${dir * 700}px, ${dy + dir * 80}px) rotate(${dir * 30}deg)`;
+            tile.style.opacity = "0";
+            vibrate(dir > 0 ? [12, 40, 18] : 18);
+            setTimeout(() => {
+              tile.remove();
+              layoutStack();
+            }, 320);
+          } else {
+            tile.style.transform = "";
+            leftTag.style.opacity = 0;
+            rightTag.style.opacity = 0;
+          }
+          dx = 0; dy = 0;
+        };
+
+        tile.addEventListener("pointerdown", onDown);
+        tile.addEventListener("pointermove", onMove);
+        tile.addEventListener("pointerup", onUp);
+        tile.addEventListener("pointercancel", onUp);
+      }
+    </script>
+  </body>
+</html>
