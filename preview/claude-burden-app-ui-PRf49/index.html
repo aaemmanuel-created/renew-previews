@@ -4,27 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="RENEW — Burden" />
+    <meta name="description" content="BURDEN by PVA — carry a burden before the Lord" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Burden" />
-    <title>Burden — RENEW</title>
+    <title>Burden — PVA</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       :root {
         --bg: #000;
         --fg: #fff;
         --muted: rgba(255,255,255,0.55);
+        --muted-strong: rgba(255,255,255,0.78);
         --glass-bg: rgba(255,255,255,0.06);
         --glass-border: rgba(255,255,255,0.14);
         --glass-highlight: rgba(255,255,255,0.22);
+        --accent: #f5d28a;
         --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+        --font-helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
         --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       }
       html, body {
         width: 100%;
         height: 100%;
-        overflow: hidden;
         background: var(--bg);
         color: var(--fg);
         font-family: var(--font-sans);
@@ -33,6 +35,7 @@
         overscroll-behavior: none;
         touch-action: manipulation;
       }
+      body { overflow: hidden; }
       #app {
         position: fixed;
         inset: 0;
@@ -56,26 +59,29 @@
         pointer-events: auto;
       }
 
-      /* ---------- screen 1: thank you ---------- */
+      /* ---------- screen 1: intro (Helvetica, fills screen) ---------- */
       #screen-intro {
         align-items: center;
         justify-content: center;
-        padding: 0 2rem;
+        padding: 0 1.5rem;
         text-align: center;
+        font-family: var(--font-helvetica);
       }
       #intro-text {
-        font-size: clamp(1.6rem, 6.2vw, 2.4rem);
+        font-family: var(--font-helvetica);
         font-weight: 300;
-        letter-spacing: -0.01em;
-        line-height: 1.25;
+        letter-spacing: -0.015em;
+        line-height: 1.08;
         color: #fff;
+        /* Fill the screen */
+        font-size: clamp(2.6rem, 11vw, 5.2rem);
+        max-width: 14ch;
         opacity: 0;
-        filter: blur(18px);
-        transform: translateY(8px);
-        max-width: 22ch;
-        transition: opacity 2200ms cubic-bezier(0.22, 1, 0.36, 1),
-                    filter 2200ms cubic-bezier(0.22, 1, 0.36, 1),
-                    transform 2200ms cubic-bezier(0.22, 1, 0.36, 1);
+        filter: blur(22px);
+        transform: translateY(10px);
+        transition: opacity 2600ms cubic-bezier(0.22, 1, 0.36, 1),
+                    filter 2600ms cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 2600ms cubic-bezier(0.22, 1, 0.36, 1);
       }
       #intro-text.in {
         opacity: 1;
@@ -85,68 +91,134 @@
       #intro-hint {
         position: absolute;
         bottom: max(2rem, env(safe-area-inset-bottom));
-        font-size: 0.72rem;
-        letter-spacing: 0.22em;
+        font-family: var(--font-helvetica);
+        font-size: 0.74rem;
+        letter-spacing: 0.26em;
         text-transform: uppercase;
         color: var(--muted);
         opacity: 0;
-        transition: opacity 700ms ease 2400ms;
+        transition: opacity 700ms ease 2800ms;
       }
       #intro-text.in ~ #intro-hint { opacity: 1; }
 
-      /* ---------- screen 2: menu ---------- */
+      /* ---------- screen 2: burden picker ---------- */
       #screen-menu {
-        padding: max(3rem, env(safe-area-inset-top)) 1.5rem max(2rem, env(safe-area-inset-bottom));
-        justify-content: space-between;
+        padding: max(3rem, env(safe-area-inset-top)) 1.25rem max(1.25rem, env(safe-area-inset-bottom));
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
       }
       .menu-header {
         display: flex;
         flex-direction: column;
-        gap: 0.35rem;
+        gap: 0.5rem;
+        padding: 0 0.3rem;
       }
       .menu-eyebrow {
         font-family: var(--font-mono);
         font-size: 0.68rem;
-        letter-spacing: 0.28em;
+        letter-spacing: 0.3em;
         text-transform: uppercase;
         color: var(--muted);
       }
-      .menu-title {
-        font-size: 1.4rem;
-        font-weight: 400;
-        letter-spacing: -0.01em;
+      .menu-title-big {
+        font-size: clamp(2.8rem, 12vw, 4.2rem);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        line-height: 0.95;
       }
-      .menu-list {
+      .menu-subtitle {
+        margin-top: 0.4rem;
+        font-size: 1rem;
+        line-height: 1.4;
+        color: var(--muted-strong);
+        max-width: 30ch;
+      }
+
+      .burden-list {
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
-        margin-top: 2rem;
+        gap: 0.85rem;
+        margin-top: 1.75rem;
+        padding-bottom: 1.5rem;
       }
-      .menu-item {
+      .burden-card {
         position: relative;
-        background: transparent;
-        border: none;
-        color: var(--fg);
         text-align: left;
-        padding: 1.6rem 0.4rem;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        padding: 1.1rem 1.15rem 1.05rem;
+        color: var(--fg);
         font-family: var(--font-sans);
-        font-size: clamp(2.2rem, 9.5vw, 3.4rem);
-        font-weight: 500;
-        letter-spacing: -0.015em;
-        line-height: 1;
         cursor: pointer;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 16px 30px -22px rgba(0,0,0,0.7);
         transition: transform 220ms ease, opacity 220ms ease;
       }
-      .menu-item:active { transform: scale(0.985); opacity: 0.85; }
-      .menu-item .menu-index {
-        position: absolute;
-        right: 0.4rem;
-        top: 50%;
-        transform: translateY(-50%);
+      .burden-card:active { transform: scale(0.985); opacity: 0.9; }
+      .burden-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+      }
+      .burden-card-church {
         font-family: var(--font-mono);
-        font-size: 0.7rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .burden-card-tag {
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .burden-card-name {
+        margin-top: 0.45rem;
+        font-size: 1.18rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .burden-card-objective {
+        margin-top: 0.5rem;
+        font-size: 0.92rem;
+        line-height: 1.4;
+        color: var(--muted-strong);
+      }
+      .burden-card-progress {
+        margin-top: 0.95rem;
+      }
+      .progress-bar {
+        position: relative;
+        width: 100%;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        overflow: hidden;
+      }
+      .progress-bar > span {
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        background: linear-gradient(90deg, #f5d28a, #fff5dd);
+        border-radius: inherit;
+      }
+      .burden-card-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.55rem;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
         letter-spacing: 0.18em;
+        text-transform: uppercase;
         color: var(--muted);
       }
       .menu-footer {
@@ -156,9 +228,10 @@
         text-transform: uppercase;
         color: var(--muted);
         text-align: center;
+        padding: 0.5rem 0 0.25rem;
       }
 
-      /* ---------- secondary header used by sub-screens ---------- */
+      /* ---------- sub header ---------- */
       .sub-header {
         position: relative;
         display: flex;
@@ -166,6 +239,7 @@
         justify-content: space-between;
         padding: max(1.2rem, env(safe-area-inset-top)) 1rem 0.8rem;
         z-index: 5;
+        flex-shrink: 0;
       }
       .back-btn {
         background: transparent;
@@ -187,232 +261,229 @@
       }
       .sub-spacer { width: 4.5rem; }
 
-      /* ---------- screen 3: burden deck ---------- */
-      #screen-burden { background: #000; }
-      .void {
+      /* ---------- screen 3: burden detail ---------- */
+      #screen-detail { background: #000; }
+      .detail-scroll {
         flex: 1;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.25rem 1.25rem max(2rem, env(safe-area-inset-bottom));
       }
-      .void::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(circle at 30% 20%, rgba(120,120,255,0.06), transparent 45%),
-          radial-gradient(circle at 75% 85%, rgba(255,200,150,0.04), transparent 50%);
-        pointer-events: none;
+      .detail-head {
+        padding: 0.5rem 0.2rem 1.2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
       }
-      .deck {
-        position: relative;
-        width: min(86vw, 360px);
-        height: min(62vh, 520px);
-      }
-      .tile {
-        position: absolute;
-        inset: 0;
-        border-radius: 28px;
-        padding: 1.6rem 1.4rem 1.4rem;
-        display: flex;
-        flex-direction: column;
-        background:
-          linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 100%);
-        border: 1px solid var(--glass-border);
-        box-shadow:
-          0 1px 0 var(--glass-highlight) inset,
-          0 30px 60px -20px rgba(0,0,0,0.8),
-          0 0 0 1px rgba(255,255,255,0.02);
-        backdrop-filter: blur(22px) saturate(140%);
-        -webkit-backdrop-filter: blur(22px) saturate(140%);
-        color: var(--fg);
-        transform-origin: center bottom;
-        will-change: transform, opacity;
-        user-select: none;
-        -webkit-user-select: none;
-      }
-      .tile::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background:
-          radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.12), transparent 60%);
-        pointer-events: none;
-        mix-blend-mode: screen;
-      }
-      .tile-eyebrow {
+      .detail-church {
         font-family: var(--font-mono);
         font-size: 0.62rem;
         letter-spacing: 0.26em;
         text-transform: uppercase;
         color: var(--muted);
       }
-      .tile-name {
-        margin-top: 0.4rem;
-        font-size: 1.3rem;
-        font-weight: 500;
-        letter-spacing: -0.005em;
+      .detail-name {
+        margin-top: 0.55rem;
+        font-size: clamp(1.8rem, 6.5vw, 2.4rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.08;
       }
-      .tile-body {
-        margin-top: 1rem;
-        font-size: 1rem;
-        line-height: 1.45;
-        color: rgba(255,255,255,0.86);
-        flex: 1;
-        overflow: hidden;
+      .detail-objective {
+        margin-top: 0.85rem;
+        font-size: 1.02rem;
+        line-height: 1.5;
+        color: var(--muted-strong);
       }
-      .tile-meta {
-        margin-top: 0.8rem;
+      .detail-progress {
+        margin-top: 1.15rem;
+      }
+      .detail-progress-numbers {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: baseline;
         font-family: var(--font-mono);
-        font-size: 0.62rem;
-        letter-spacing: 0.2em;
+        font-size: 0.66rem;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--muted);
       }
-      .tile-actions {
-        margin-top: 1rem;
+      .detail-progress-numbers strong {
+        color: var(--fg);
+        font-weight: 500;
+      }
+      .detail-progress .progress-bar {
+        margin-top: 0.5rem;
+        height: 5px;
+      }
+      .detail-section {
+        padding: 1.25rem 0.2rem 0.1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      .detail-section:last-of-type { border-bottom: none; }
+      .detail-section h3 {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.65rem;
+      }
+      .detail-section p,
+      .detail-section li {
+        font-size: 0.96rem;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.92);
+      }
+      .detail-section .role-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .detail-section .role-list li {
         display: flex;
         gap: 0.6rem;
-        justify-content: center;
+        align-items: baseline;
       }
-      .pill {
+      .detail-section .role-list li .role {
+        flex-shrink: 0;
         font-family: var(--font-mono);
         font-size: 0.62rem;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0.55rem 0.9rem;
-        border-radius: 999px;
+        color: var(--accent);
+        min-width: 7rem;
+      }
+      .workflow-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step;
+      }
+      .workflow-steps li {
+        position: relative;
+        padding-left: 2rem;
+        counter-increment: step;
+      }
+      .workflow-steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0.05rem;
+        width: 1.35rem;
+        height: 1.35rem;
+        border-radius: 50%;
+        border: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 0.66rem;
+        color: var(--muted-strong);
+      }
+
+      .prayer-section {
+        margin-top: 1.25rem;
+        padding: 1.1rem 1.15rem;
+        background:
+          linear-gradient(180deg, rgba(245,210,138,0.08) 0%, rgba(245,210,138,0.02) 100%);
+        border: 1px solid rgba(245,210,138,0.18);
+        border-radius: 22px;
+      }
+      .prayer-section h3 {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+      }
+      .prayer-section .prayer-meta {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.6rem;
+      }
+      .prayer-section p {
+        font-size: 0.96rem;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.92);
+      }
+      .prayer-section .prayer-focus {
+        margin-top: 0.55rem;
+        font-style: italic;
+        color: var(--muted-strong);
+      }
+
+      .detail-actions {
+        position: sticky;
+        bottom: 0;
+        margin-top: 1.5rem;
+        padding: 0.8rem 0 0.2rem;
+        display: flex;
+        gap: 0.6rem;
+        background: linear-gradient(180deg, rgba(0,0,0,0), #000 35%);
+      }
+      .btn {
+        flex: 1;
+        border: none;
+        padding: 0.95rem 1rem;
+        border-radius: 14px;
+        font-family: var(--font-sans);
+        font-size: 0.92rem;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        cursor: pointer;
+        transition: transform 180ms ease, opacity 180ms ease;
+      }
+      .btn:active { transform: scale(0.98); opacity: 0.9; }
+      .btn-ghost {
         background: rgba(255,255,255,0.06);
         border: 1px solid var(--glass-border);
         color: var(--fg);
       }
-      .swipe-tag {
-        position: absolute;
-        top: 1.2rem;
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        padding: 0.4rem 0.7rem;
-        border-radius: 8px;
-        border: 1.5px solid currentColor;
-        opacity: 0;
-        pointer-events: none;
+      .btn-primary {
+        background: linear-gradient(180deg, #fff5dd, #f5d28a);
+        color: #1a1408;
       }
-      .swipe-tag.left { left: 1rem; color: #ff7a7a; transform: rotate(-12deg); }
-      .swipe-tag.right { right: 1rem; color: #7affb0; transform: rotate(12deg); }
-      .deck-hint {
-        position: absolute;
-        bottom: max(1.5rem, env(safe-area-inset-bottom));
-        left: 0; right: 0;
-        text-align: center;
-        font-family: var(--font-mono);
-        font-size: 0.62rem;
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-      .empty {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--muted);
-        text-align: center;
-        line-height: 1.8;
-      }
-
-      /* ---------- generic sub screens ---------- */
-      .placeholder {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        text-align: center;
-      }
-      .placeholder p {
-        font-size: 1rem;
-        line-height: 1.5;
-        color: var(--muted);
-        max-width: 28ch;
+      .btn.joined {
+        background: rgba(245,210,138,0.18);
+        color: var(--accent);
+        border: 1px solid rgba(245,210,138,0.4);
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <!-- Screen 1: intro fade-in -->
+      <!-- Screen 1: intro -->
       <section id="screen-intro" class="screen active">
         <h1 id="intro-text">Thank you for supporting a burden today</h1>
         <span id="intro-hint">Tap to continue</span>
       </section>
 
-      <!-- Screen 2: menu -->
+      <!-- Screen 2: burden picker -->
       <section id="screen-menu" class="screen">
-        <div>
-          <div class="menu-header">
-            <span class="menu-eyebrow">RENEW</span>
-            <span class="menu-title">Welcome back</span>
-          </div>
-          <div class="menu-list">
-            <button class="menu-item" data-go="weekly">
-              Burden of the Week
-              <span class="menu-index">01</span>
-            </button>
-            <button class="menu-item" data-go="burden">
-              Burden
-              <span class="menu-index">02</span>
-            </button>
-            <button class="menu-item" data-go="spree">
-              Spree
-              <span class="menu-index">03</span>
-            </button>
-          </div>
+        <div class="menu-header">
+          <span class="menu-eyebrow">Burden of the Week</span>
+          <h1 class="menu-title-big">Burden</h1>
+          <p class="menu-subtitle">Pick the burden you want to carry before the Lord.</p>
         </div>
-        <div class="menu-footer">Speak the Word · Joshua 1:8</div>
+        <div class="burden-list" id="burden-list"></div>
+        <div class="menu-footer">BURDEN by PVA · Joshua 1:8</div>
       </section>
 
-      <!-- Screen 3a: burden deck -->
-      <section id="screen-burden" class="screen">
+      <!-- Screen 3: burden detail -->
+      <section id="screen-detail" class="screen">
         <div class="sub-header">
           <button class="back-btn" data-go="menu">&larr; Back</button>
           <span class="sub-title">Burden</span>
           <span class="sub-spacer"></span>
         </div>
-        <div class="void">
-          <div class="deck" id="deck"></div>
-          <div class="deck-hint">Swipe · Tap to read</div>
-        </div>
-      </section>
-
-      <!-- Screen 3b: weekly placeholder -->
-      <section id="screen-weekly" class="screen">
-        <div class="sub-header">
-          <button class="back-btn" data-go="menu">&larr; Back</button>
-          <span class="sub-title">Burden of the Week</span>
-          <span class="sub-spacer"></span>
-        </div>
-        <div class="placeholder">
-          <p>This week's collective burden will surface here.</p>
-        </div>
-      </section>
-
-      <!-- Screen 3c: spree placeholder -->
-      <section id="screen-spree" class="screen">
-        <div class="sub-header">
-          <button class="back-btn" data-go="menu">&larr; Back</button>
-          <span class="sub-title">Spree</span>
-          <span class="sub-spacer"></span>
-        </div>
-        <div class="placeholder">
-          <p>Spree mode coming soon.</p>
-        </div>
+        <div class="detail-scroll" id="detail-scroll"></div>
       </section>
     </div>
 
@@ -424,18 +495,21 @@
         try { navigator.vibrate(pattern); } catch (_) {}
       }
 
-      // Pulse that intensifies in lockstep with the text fade-in (~2.2s).
-      // Each pulse is longer + each gap is shorter than the previous.
+      // Rewind-style intensifying open: short pulses get longer, gaps get shorter,
+      // ending in a final strong tap. Total run ~2.5s, locked to the text fade-in.
       function runIntroHaptics() {
         if (!canVibrate) return;
         const pattern = [
-          40, 220,
-          55, 200,
-          75, 170,
-          100, 140,
-          130, 110,
-          170, 80,
-          220
+          18, 360,
+          24, 310,
+          32, 260,
+          44, 215,
+          60, 175,
+          82, 140,
+          110, 110,
+          150, 85,
+          200, 60,
+          280
         ];
         vibrate(pattern);
       }
@@ -444,15 +518,16 @@
       const screens = {
         intro:   document.getElementById("screen-intro"),
         menu:    document.getElementById("screen-menu"),
-        burden:  document.getElementById("screen-burden"),
-        weekly:  document.getElementById("screen-weekly"),
-        spree:   document.getElementById("screen-spree"),
+        detail:  document.getElementById("screen-detail"),
       };
       function show(name) {
         Object.entries(screens).forEach(([key, el]) => {
           el.classList.toggle("active", key === name);
         });
-        if (name === "burden") buildDeck();
+        if (name === "menu" && !menuBuilt) buildMenu();
+        // Reset scroll on navigation
+        if (name === "menu") screens.menu.scrollTop = 0;
+        if (name === "detail") document.getElementById("detail-scroll").scrollTop = 0;
       }
       document.querySelectorAll("[data-go]").forEach((el) => {
         el.addEventListener("click", () => {
@@ -464,158 +539,335 @@
       // ---------- intro fade-in ----------
       const introText = document.getElementById("intro-text");
       const introScreen = document.getElementById("screen-intro");
-      // Kick off the fade + pulse on the next frame so the transition runs.
       requestAnimationFrame(() => {
         setTimeout(() => {
           introText.classList.add("in");
           runIntroHaptics();
         }, 250);
       });
-      // Tap intro to advance.
       introScreen.addEventListener("click", () => {
         if (!introText.classList.contains("in")) return;
-        vibrate(20);
+        vibrate(22);
         show("menu");
       });
 
-      // ---------- burden deck ----------
+      // ---------- burdens (church-funded projects) ----------
+      // Each burden is a specific project. Churches define the objective,
+      // current state, who handles what, how the money moves, and who
+      // delivers on the ground. Each burden has a prayer group donors can
+      // join so prayer is specific to the burden being carried.
       const BURDENS = [
         {
-          name: "Maya",
-          weight: "Grief",
-          body: "Lost her mother last month. Carrying the quiet weight of being the one who has to hold the family together.",
-          asked: "Pray for rest, and that joy finds its way back in small moments.",
+          id: "schoolfees-grace",
+          church: "Grace Chapel · Lagos",
+          name: "School Fees · 12 Displaced Children",
+          tag: "Education",
+          objective:
+            "Cover one term of school fees, books, and uniforms for 12 children from displaced families in the Ajegunle community.",
+          state: {
+            raised: 620000,
+            goal: 1500000,
+            currency: "₦",
+            note: "4 of 12 children fully covered. Term begins Sept 9.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Ada Okafor" },
+            { role: "Treasury", person: "Sis. Funke Adeyemi" },
+            { role: "School Liaison", person: "Bro. Tunde Bello" },
+          ],
+          workflow: [
+            "Donors give in-app or to the church account (GTB 0123456789).",
+            "Treasury reconciles weekly and posts ledger to the congregation.",
+            "Funds released to the school bursar against an invoice per child.",
+            "Bursar issues receipts; copies shared with donors who joined the burden.",
+          ],
+          delivery:
+            "Sis. Funke delivers payment in person to Bright Future Academy each Friday. Photos of receipts are posted in the prayer group the same evening.",
+          prayer: {
+            members: 18,
+            meets: "Wednesdays · 7:00pm WAT",
+            focus:
+              "That every child finishes the term, that their families find steady work, and that the school remains a place of peace.",
+          },
         },
         {
-          name: "Daniel",
-          weight: "Provision",
-          body: "Out of work for six weeks. Two kids at home, rent due Friday. Faith feels thin some mornings.",
-          asked: "Pray for the right door to open — and the courage to walk through it.",
+          id: "borehole-rivers",
+          church: "Living Stones · Port Harcourt",
+          name: "Borehole for Eleme Village",
+          tag: "Water",
+          objective:
+            "Drill and commission a community borehole serving roughly 400 households who currently walk 2.4 km for clean water.",
+          state: {
+            raised: 1850000,
+            goal: 3200000,
+            currency: "₦",
+            note: "Site surveyed. Drilling contractor on standby pending balance.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Emeka Wodu" },
+            { role: "Treasury", person: "Deacon Patience Igwe" },
+            { role: "Contractor", person: "ClearFlow Drilling Ltd." },
+            { role: "Community Lead", person: "Chief Nnamdi (village head)" },
+          ],
+          workflow: [
+            "Donations pooled in a dedicated project account, separate from tithes.",
+            "Milestone payments: 40% on drilling, 40% on casing, 20% on commissioning.",
+            "Each milestone signed off by the community lead before release.",
+            "Final audit posted publicly to donors and the village council.",
+          ],
+          delivery:
+            "ClearFlow Drilling executes the work; Deacon Patience and Chief Nnamdi co-sign each milestone on site before treasury releases the next tranche.",
+          prayer: {
+            members: 31,
+            meets: "Tuesdays · 6:30am WAT",
+            focus:
+              "That the water source is deep and clean, that the contractor delivers with integrity, and that the village is preserved through the dry season.",
+          },
         },
         {
-          name: "Imani",
-          weight: "Healing",
-          body: "Test results back next Tuesday. She is choosing peace, but the waiting is the hardest part.",
-          asked: "Pray for a clean report, and for stillness inside the unknown.",
+          id: "widows-food-mercy",
+          church: "Mercy House · Nairobi",
+          name: "Monthly Food Basket · 24 Widows",
+          tag: "Provision",
+          objective:
+            "Provide a monthly food basket (maize, beans, oil, salt, sugar, soap) for 24 widows in the Kibera congregation for six months.",
+          state: {
+            raised: 184000,
+            goal: 360000,
+            currency: "KSh",
+            note: "Month 3 of 6. Basket cost stable; supplier contract locked.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Grace Mwangi" },
+            { role: "Treasury", person: "Bro. Samuel Otieno" },
+            { role: "Supplier", person: "Tumaini Wholesalers" },
+            { role: "Distribution", person: "Mama Wanjiku + 3 volunteers" },
+          ],
+          workflow: [
+            "Donations collected through the in-app burden, ring-fenced from tithes.",
+            "Treasury pays Tumaini Wholesalers on the 25th of each month.",
+            "Baskets packed at the church hall on the 1st Saturday of each month.",
+            "Distribution log signed by each widow; photos shared with donors.",
+          ],
+          delivery:
+            "Mama Wanjiku and three volunteers deliver baskets door-to-door to widows who cannot collect from the church hall.",
+          prayer: {
+            members: 14,
+            meets: "Saturdays · 9:00am EAT",
+            focus:
+              "Strength and dignity for each widow named in the list, and that no household goes hungry this month.",
+          },
         },
         {
-          name: "Marcus",
-          weight: "Marriage",
-          body: "He and his wife are sleeping in different rooms again. Trying to remember what brought them together.",
-          asked: "Pray for soft words, and for love to find its way back.",
+          id: "clinic-restock-hope",
+          church: "Hope Assembly · Kumasi",
+          name: "Restock Community Clinic",
+          tag: "Health",
+          objective:
+            "Restock essential medicines (malaria, antibiotics, ORS, prenatal) at the church-run clinic serving the surrounding three neighbourhoods.",
+          state: {
+            raised: 9400,
+            goal: 14000,
+            currency: "₵",
+            note: "Order placed with licensed wholesaler; awaiting balance to clear.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Kwabena Asare" },
+            { role: "Treasury", person: "Sis. Akosua Mensah" },
+            { role: "Clinic Lead", person: "Nurse Adwoa Boateng" },
+            { role: "Supplier", person: "MediPlus Pharma Ghana" },
+          ],
+          workflow: [
+            "Donations held in the clinic project account, audited monthly.",
+            "Nurse Adwoa submits a restock list signed by the resident doctor.",
+            "Treasury pays MediPlus directly; no cash handled by clinic staff.",
+            "Stock log opened to donors who joined the burden.",
+          ],
+          delivery:
+            "MediPlus delivers to the clinic; Nurse Adwoa receives, counts and signs in stock. Audit posted to the burden each month.",
+          prayer: {
+            members: 22,
+            meets: "Thursdays · 8:00pm GMT",
+            focus:
+              "Healing for every patient who walks in this month, wisdom for the clinic staff, and that the supply chain holds steady.",
+          },
         },
         {
-          name: "Sade",
-          weight: "Direction",
-          body: "Senior year. Everyone has a plan except her. She is praying for clarity, not just options.",
-          asked: "Pray that the right path makes itself known — and that she trusts it.",
+          id: "roof-shelter-zion",
+          church: "Zion Fellowship · Abuja",
+          name: "Re-roof a Widow's Home",
+          tag: "Shelter",
+          objective:
+            "Replace the leaking roof on Mama Ngozi's home in Karu before the rains return in earnest.",
+          state: {
+            raised: 410000,
+            goal: 480000,
+            currency: "₦",
+            note: "Materials sourced. Carpenter booked for next weekend.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Ibrahim Yusuf" },
+            { role: "Treasury", person: "Bro. Chinedu Okonkwo" },
+            { role: "Carpenter", person: "Master Sule + 2 apprentices" },
+            { role: "Site Lead", person: "Sis. Halima (deaconess)" },
+          ],
+          workflow: [
+            "Donations held in the shelter project account.",
+            "Materials paid for directly to the supplier (no cash to crew).",
+            "Carpenter paid 50% on start, 50% on completion and sign-off.",
+            "Final photos shared with donors when the roof is on.",
+          ],
+          delivery:
+            "Master Sule and his apprentices install the roof; Sis. Halima oversees on site and signs off completion before final payment is released.",
+          prayer: {
+            members: 9,
+            meets: "Sundays · 4:00pm WAT",
+            focus:
+              "Safety for the crew on the roof, dry days for the install, and lasting peace inside Mama Ngozi's home.",
+          },
         },
       ];
 
-      const deck = document.getElementById("deck");
-      let deckBuilt = false;
+      // Persist which burdens the user has joined the prayer group for.
+      const STORAGE_KEY = "burden.prayer.joined";
+      function loadJoined() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? new Set(JSON.parse(raw)) : new Set();
+        } catch (_) { return new Set(); }
+      }
+      function saveJoined(set) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); } catch (_) {}
+      }
+      const joined = loadJoined();
 
-      function buildDeck() {
-        if (deckBuilt) return;
-        deckBuilt = true;
-        deck.innerHTML = "";
-        // Render in reverse so the first burden ends up on top of the stack.
-        BURDENS.slice().reverse().forEach((b, idx) => {
-          const tile = document.createElement("div");
-          tile.className = "tile";
-          tile.innerHTML = `
-            <div class="swipe-tag left">Pass</div>
-            <div class="swipe-tag right">Pray</div>
-            <span class="tile-eyebrow">${b.weight}</span>
-            <h2 class="tile-name">${b.name}</h2>
-            <div class="tile-body">
-              <p>${b.body}</p>
-              <p style="margin-top:0.8rem;color:var(--muted);font-size:0.92rem;">${b.asked}</p>
+      // ---------- formatting ----------
+      function fmtMoney(amount, currency) {
+        // Compact, locale-light formatting.
+        return currency + amount.toLocaleString("en-US");
+      }
+      function pct(raised, goal) {
+        return Math.max(0, Math.min(100, Math.round((raised / goal) * 100)));
+      }
+
+      // ---------- burden picker ----------
+      const burdenList = document.getElementById("burden-list");
+      let menuBuilt = false;
+      function buildMenu() {
+        menuBuilt = true;
+        burdenList.innerHTML = "";
+        BURDENS.forEach((b) => {
+          const p = pct(b.state.raised, b.state.goal);
+          const card = document.createElement("button");
+          card.className = "burden-card";
+          card.type = "button";
+          card.innerHTML = `
+            <div class="burden-card-row">
+              <span class="burden-card-church">${b.church}</span>
+              <span class="burden-card-tag">${b.tag}</span>
             </div>
-            <div class="tile-meta">
-              <span>Anonymous</span>
-              <span>Burden</span>
-            </div>
-            <div class="tile-actions">
-              <span class="pill">Hold</span>
-              <span class="pill">Pray</span>
+            <h2 class="burden-card-name">${b.name}</h2>
+            <p class="burden-card-objective">${b.objective}</p>
+            <div class="burden-card-progress">
+              <div class="progress-bar"><span style="width:${p}%"></span></div>
+              <div class="burden-card-meta">
+                <span>${fmtMoney(b.state.raised, b.state.currency)} of ${fmtMoney(b.state.goal, b.state.currency)}</span>
+                <span>${b.prayer.members} praying</span>
+              </div>
             </div>
           `;
-          deck.appendChild(tile);
-          attachSwipe(tile);
+          card.addEventListener("click", () => {
+            vibrate(14);
+            openBurden(b.id);
+          });
+          burdenList.appendChild(card);
         });
-        layoutStack();
       }
 
-      function layoutStack() {
-        const tiles = Array.from(deck.querySelectorAll(".tile"));
-        // Topmost is the LAST child (rendered last → on top in stacking order).
-        tiles.forEach((t, i) => {
-          const depth = (tiles.length - 1) - i; // 0 for top, larger as you go down
-          t.style.transform = `translateY(${depth * 10}px) scale(${1 - depth * 0.04})`;
-          t.style.opacity = depth > 2 ? 0 : 1;
-          t.style.zIndex = i;
-          t.style.pointerEvents = depth === 0 ? "auto" : "none";
-        });
-        if (tiles.length === 0) {
-          deck.innerHTML = `<div class="empty">No burdens left.<br/>Come back tomorrow.</div>`;
-        }
-      }
+      // ---------- burden detail ----------
+      const detailScroll = document.getElementById("detail-scroll");
+      function openBurden(id) {
+        const b = BURDENS.find((x) => x.id === id);
+        if (!b) return;
+        const p = pct(b.state.raised, b.state.goal);
+        const isJoined = joined.has(b.id);
+        detailScroll.innerHTML = `
+          <div class="detail-head">
+            <span class="detail-church">${b.church} · ${b.tag}</span>
+            <h2 class="detail-name">${b.name}</h2>
+            <p class="detail-objective">${b.objective}</p>
+            <div class="detail-progress">
+              <div class="detail-progress-numbers">
+                <span><strong>${fmtMoney(b.state.raised, b.state.currency)}</strong> of ${fmtMoney(b.state.goal, b.state.currency)}</span>
+                <span>${p}%</span>
+              </div>
+              <div class="progress-bar"><span style="width:${p}%"></span></div>
+            </div>
+          </div>
 
-      function attachSwipe(tile) {
-        let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false, pointerId = null;
-        const leftTag = tile.querySelector(".swipe-tag.left");
-        const rightTag = tile.querySelector(".swipe-tag.right");
+          <div class="detail-section">
+            <h3>Current State</h3>
+            <p>${b.state.note}</p>
+          </div>
 
-        const onDown = (e) => {
-          // Only allow swipe on the top tile.
-          const tiles = Array.from(deck.querySelectorAll(".tile"));
-          if (tiles[tiles.length - 1] !== tile) return;
-          dragging = true;
-          pointerId = e.pointerId;
-          startX = e.clientX; startY = e.clientY;
-          tile.setPointerCapture?.(pointerId);
-          tile.style.transition = "none";
-          vibrate(8);
-        };
-        const onMove = (e) => {
-          if (!dragging || e.pointerId !== pointerId) return;
-          dx = e.clientX - startX;
-          dy = e.clientY - startY;
-          const rot = dx / 18;
-          tile.style.transform = `translate(${dx}px, ${dy * 0.4}px) rotate(${rot}deg)`;
-          const mag = Math.min(Math.abs(dx) / 120, 1);
-          if (dx > 0) { rightTag.style.opacity = mag; leftTag.style.opacity = 0; }
-          else if (dx < 0) { leftTag.style.opacity = mag; rightTag.style.opacity = 0; }
-          else { leftTag.style.opacity = 0; rightTag.style.opacity = 0; }
-        };
-        const onUp = (e) => {
-          if (!dragging || e.pointerId !== pointerId) return;
-          dragging = false;
-          tile.releasePointerCapture?.(pointerId);
-          const threshold = 110;
-          tile.style.transition = "transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease";
-          if (Math.abs(dx) > threshold) {
-            const dir = dx > 0 ? 1 : -1;
-            tile.style.transform = `translate(${dir * 700}px, ${dy + dir * 80}px) rotate(${dir * 30}deg)`;
-            tile.style.opacity = "0";
-            vibrate(dir > 0 ? [12, 40, 18] : 18);
-            setTimeout(() => {
-              tile.remove();
-              layoutStack();
-            }, 320);
+          <div class="detail-section">
+            <h3>Who Handles What</h3>
+            <ul class="role-list">
+              ${b.handlers.map(h => `
+                <li><span class="role">${h.role}</span><span>${h.person}</span></li>
+              `).join("")}
+            </ul>
+          </div>
+
+          <div class="detail-section">
+            <h3>Money Workflow</h3>
+            <ol class="workflow-steps">
+              ${b.workflow.map(step => `<li>${step}</li>`).join("")}
+            </ol>
+          </div>
+
+          <div class="detail-section">
+            <h3>On the Ground</h3>
+            <p>${b.delivery}</p>
+          </div>
+
+          <div class="prayer-section">
+            <h3>Prayer Group</h3>
+            <div class="prayer-meta">${b.prayer.members + (isJoined ? 1 : 0)} praying · ${b.prayer.meets}</div>
+            <p>Donors who carry this burden also pray for it. Prayer here is specific to this burden — nothing generic.</p>
+            <p class="prayer-focus">“${b.prayer.focus}”</p>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn ${isJoined ? "joined" : "btn-ghost"}" id="join-btn">
+              ${isJoined ? "✓ In the prayer group" : "Join the prayer group"}
+            </button>
+            <button class="btn btn-primary" id="contribute-btn">Contribute</button>
+          </div>
+        `;
+
+        const joinBtn = document.getElementById("join-btn");
+        joinBtn.addEventListener("click", () => {
+          if (joined.has(b.id)) {
+            joined.delete(b.id);
+            vibrate(10);
           } else {
-            tile.style.transform = "";
-            leftTag.style.opacity = 0;
-            rightTag.style.opacity = 0;
+            joined.add(b.id);
+            vibrate([18, 60, 24]);
           }
-          dx = 0; dy = 0;
-        };
+          saveJoined(joined);
+          openBurden(b.id);
+        });
 
-        tile.addEventListener("pointerdown", onDown);
-        tile.addEventListener("pointermove", onMove);
-        tile.addEventListener("pointerup", onUp);
-        tile.addEventListener("pointercancel", onUp);
+        const contributeBtn = document.getElementById("contribute-btn");
+        contributeBtn.addEventListener("click", () => {
+          vibrate([14, 40, 14]);
+          contributeBtn.textContent = "Thank you · receipt coming";
+          contributeBtn.disabled = true;
+          contributeBtn.style.opacity = "0.85";
+        });
+
+        show("detail");
       }
     </script>
   </body>
