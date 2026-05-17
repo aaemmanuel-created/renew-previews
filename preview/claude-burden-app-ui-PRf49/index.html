@@ -131,8 +131,8 @@
       .menu-list {
         display: flex;
         flex-direction: column;
-        gap: 0.2rem;
-        margin-top: 2.2rem;
+        gap: 0;
+        margin-top: 2rem;
       }
       .menu-item {
         position: relative;
@@ -140,7 +140,7 @@
         border: none;
         color: var(--fg);
         text-align: left;
-        padding: 1.25rem 0.4rem;
+        padding: 0.45rem 0.4rem;
         font-family: var(--font-mono);
         font-size: clamp(1.3rem, 5.6vw, 1.9rem);
         font-weight: 600;
@@ -325,6 +325,76 @@
         color: var(--accent);
         margin-bottom: 0.5rem;
       }
+
+      /* ---------- spree extras ---------- */
+      .spree-counter {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin: 1.1rem 0.2rem 0;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        background:
+          linear-gradient(180deg, rgba(61,93,181,0.22) 0%, rgba(26,44,102,0.06) 100%);
+        border: 1px solid var(--accent-border);
+      }
+      .spree-counter-label {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .spree-counter-value {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        letter-spacing: 0.04em;
+        color: var(--fg);
+        font-weight: 600;
+      }
+      .spree-action {
+        margin-top: 0.85rem;
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid rgba(125,163,255,0.12);
+        padding-top: 0.7rem;
+      }
+      .spree-action-pill {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.55rem 0.95rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent-border);
+        background: var(--accent-soft);
+        color: var(--accent);
+        cursor: pointer;
+        transition: transform 180ms ease, opacity 180ms ease;
+      }
+      .spree-action-pill:active { transform: scale(0.97); opacity: 0.9; }
+      .spree-action-pill.given {
+        background: linear-gradient(180deg, #3d5db5, #15235a);
+        color: #f4f6ff;
+        border-color: transparent;
+      }
+      .browse-all {
+        display: block;
+        width: 100%;
+        margin-top: 1.1rem;
+        padding: 0.95rem 1rem;
+        border-radius: 14px;
+        border: 1px solid var(--glass-border);
+        background: rgba(125,163,255,0.04);
+        color: var(--fg);
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 180ms ease, opacity 180ms ease;
+      }
+      .browse-all:active { transform: scale(0.99); opacity: 0.9; }
 
       /* ---------- screen 4: burden detail ---------- */
       #screen-detail { background: var(--bg); }
@@ -545,7 +615,7 @@
           </div>
           <div class="menu-list">
             <button class="menu-item" data-list="weekly">Burden of the Week</button>
-            <button class="menu-item" data-list="burden">Burden</button>
+            <button class="menu-item" data-list="burden">Burdens</button>
             <button class="menu-item" data-list="spree">Spree</button>
           </div>
         </div>
@@ -812,7 +882,119 @@
               "Safety for the crew on the roof, dry days for the install, and lasting peace inside Mama Ngozi's home.",
           },
         },
+        {
+          id: "sundays-transport-mombasa",
+          church: "Faith Tabernacle · Mombasa",
+          name: "Sunday Transport · 30 Children",
+          tag: "Children",
+          objective:
+            "Cover six months of Sunday matatu fare so 30 children from outlying neighbourhoods can keep coming to Sunday School.",
+          state: {
+            raised: 22000,
+            goal: 48000,
+            currency: "KSh",
+            note: "Month 2 of 6. 30 children attending consistently.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Daniel Mwakio" },
+            { role: "Treasury", person: "Sis. Esther Wairimu" },
+            { role: "Children's Lead", person: "Bro. Joseph Karisa" },
+          ],
+          workflow: [
+            "Donations held in the children's ministry account.",
+            "Treasury pays the matatu sacco a fixed monthly fare.",
+            "Attendance register and route shared with donors weekly.",
+            "Any underspend rolls into the following month, never out.",
+          ],
+          delivery:
+            "Bro. Joseph rides with the children each Sunday and signs the attendance register before next week's fare is released.",
+          prayer: {
+            members: 11,
+            meets: "Fridays · 6:00pm EAT",
+            focus:
+              "Safety on the road every Sunday, that no child is left behind, and that the Word planted grows roots in each home.",
+          },
+        },
+        {
+          id: "sewing-coop-accra",
+          church: "New Life Fellowship · Accra",
+          name: "Sewing Co-op Startup · 18 Mothers",
+          tag: "Livelihood",
+          objective:
+            "Equip a sewing co-operative with 6 machines, 3 months of materials, and a trainer so 18 single mothers can earn a stable income.",
+          state: {
+            raised: 7200,
+            goal: 12500,
+            currency: "₵",
+            note: "Trainer confirmed. Machines quoted; awaiting balance to order.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Yaa Boateng" },
+            { role: "Treasury", person: "Sis. Ama Owusu" },
+            { role: "Trainer", person: "Aunt Comfort (master tailor)" },
+            { role: "Site Lead", person: "Sis. Naa Adoley" },
+          ],
+          workflow: [
+            "Donations held in the co-op project account.",
+            "Machines purchased from a registered supplier with a one-year warranty.",
+            "Materials paid in monthly batches against attendance and output.",
+            "First three months of co-op income split: 60% mothers, 30% reinvestment, 10% church mercy fund.",
+          ],
+          delivery:
+            "Aunt Comfort runs daily training at the fellowship hall; Sis. Naa Adoley keeps the attendance and output log donors read each week.",
+          prayer: {
+            members: 16,
+            meets: "Mondays · 7:30pm GMT",
+            focus:
+              "Steady hands, steady income, and that each mother walks out of the co-op with skills and dignity she can build a home on.",
+          },
+        },
+        {
+          id: "hospital-bills-cornerstone",
+          church: "Cornerstone Church · Lagos",
+          name: "Hospital Bills · Sis. Adaeze",
+          tag: "Medical",
+          objective:
+            "Settle the outstanding hospital bills for Sis. Adaeze, a deacon's wife recovering from emergency surgery.",
+          state: {
+            raised: 540000,
+            goal: 920000,
+            currency: "₦",
+            note: "Discharge cleared. Outstanding bills due in 14 days.",
+          },
+          handlers: [
+            { role: "Oversight", person: "Pastor Obinna Eze" },
+            { role: "Treasury", person: "Bro. Femi Adekoya" },
+            { role: "Family Liaison", person: "Deaconess Ifeoma" },
+          ],
+          workflow: [
+            "Donations held in the mercy fund account, separate from the general purse.",
+            "Treasury pays the hospital directly against the itemised invoice.",
+            "Itemised receipts shared with donors who joined the burden.",
+            "Any surplus rolls into the church mercy fund for the next need.",
+          ],
+          delivery:
+            "Bro. Femi pays the hospital directly; Deaconess Ifeoma sits with the family and brings back the receipts the same day.",
+          prayer: {
+            members: 27,
+            meets: "Thursdays · 7:00pm WAT",
+            focus:
+              "Full recovery for Sis. Adaeze, peace and strength for her household, and that no debt outlives this season.",
+          },
+        },
       ];
+
+      // This week's Spree selection — 7 burdens. The wider list shows all burdens.
+      const SPREE_IDS = new Set([
+        "schoolfees-grace",
+        "borehole-rivers",
+        "widows-food-mercy",
+        "clinic-restock-hope",
+        "roof-shelter-zion",
+        "sundays-transport-mombasa",
+        "sewing-coop-accra",
+      ]);
+      const SPREE_TOTAL = 7;
 
       // ---------- joined prayer groups (persistent) ----------
       const STORAGE_KEY = "burden.prayer.joined";
@@ -827,6 +1009,19 @@
       }
       const joined = loadJoined();
 
+      // ---------- spree gifts (persistent) ----------
+      const SPREE_STORAGE_KEY = "burden.spree.given";
+      function loadSpreeGiven() {
+        try {
+          const raw = localStorage.getItem(SPREE_STORAGE_KEY);
+          return raw ? new Set(JSON.parse(raw)) : new Set();
+        } catch (_) { return new Set(); }
+      }
+      function saveSpreeGiven(set) {
+        try { localStorage.setItem(SPREE_STORAGE_KEY, JSON.stringify([...set])); } catch (_) {}
+      }
+      const spreeGiven = loadSpreeGiven();
+
       function fmtMoney(amount, currency) { return currency + amount.toLocaleString("en-US"); }
       function pct(raised, goal) { return Math.max(0, Math.min(100, Math.round((raised / goal) * 100))); }
 
@@ -840,15 +1035,15 @@
         },
         burden: {
           eyebrow: "All Open",
-          title: "Burden",
+          title: "Burdens",
           subtitle: "Pick the burden you want to carry before the Lord.",
           filter: () => true,
         },
         spree: {
-          eyebrow: "Carry More Than One",
+          eyebrow: "This Week's Challenge",
           title: "Spree",
-          subtitle: "Pick as many burdens as you can carry before the Lord today.",
-          filter: () => true,
+          subtitle: "This is a challenge to give a dollar to seven different Burdens. When you SPREE, you spend a total of seven dollars. We've gone ahead and selected seven burdens as part of this week's spree selection. You still have the option to choose from the wider list of burdens available to carry.",
+          filter: (b) => SPREE_IDS.has(b.id),
         },
       };
 
@@ -867,8 +1062,34 @@
         listTitleEl.textContent = cfg.title;
         listSubtitleEl.textContent = cfg.subtitle;
         listSubTitle.textContent = cfg.title;
+        renderListExtras(key);
         renderBurdenList(BURDENS.filter(cfg.filter));
         show("list");
+      }
+
+      function renderListExtras(key) {
+        // Clear any extras from a previous render.
+        document.querySelectorAll(".spree-counter, .browse-all").forEach((el) => el.remove());
+        if (key !== "spree") return;
+
+        const givenInSpree = [...spreeGiven].filter((id) => SPREE_IDS.has(id)).length;
+        const counter = document.createElement("div");
+        counter.className = "spree-counter";
+        counter.innerHTML = `
+          <span class="spree-counter-label">Your Spree</span>
+          <span class="spree-counter-value">$${givenInSpree} of $${SPREE_TOTAL} given</span>
+        `;
+        burdenListEl.parentNode.insertBefore(counter, burdenListEl);
+
+        const browseBtn = document.createElement("button");
+        browseBtn.className = "browse-all";
+        browseBtn.type = "button";
+        browseBtn.textContent = "Browse the wider list of burdens →";
+        browseBtn.addEventListener("click", () => {
+          vibrate(14);
+          openList("burden");
+        });
+        burdenListEl.parentNode.appendChild(browseBtn);
       }
 
       function renderBurdenList(items) {
@@ -882,9 +1103,12 @@
         }
         items.forEach((b) => {
           const p = pct(b.state.raised, b.state.goal);
-          const card = document.createElement("button");
+          const isSpree = currentListKey === "spree";
+          const isGiven = isSpree && spreeGiven.has(b.id);
+          const card = document.createElement("div");
           card.className = "burden-card" + (b.featured && currentListKey === "weekly" ? " featured" : "");
-          card.type = "button";
+          card.setAttribute("role", "button");
+          card.setAttribute("tabindex", "0");
           card.innerHTML = `
             ${b.featured && currentListKey === "weekly" ? `<span class="featured-flag">This Week</span>` : ""}
             <div class="burden-card-row">
@@ -900,11 +1124,33 @@
                 <span>${b.prayer.members} praying</span>
               </div>
             </div>
+            ${isSpree ? `
+              <div class="spree-action">
+                <button type="button" class="spree-action-pill ${isGiven ? "given" : ""}">
+                  ${isGiven ? "✓ $1 added" : "+ $1 to spree"}
+                </button>
+              </div>
+            ` : ""}
           `;
           card.addEventListener("click", () => {
             vibrate(14);
             openBurden(b.id);
           });
+          if (isSpree) {
+            const pill = card.querySelector(".spree-action-pill");
+            pill.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if (spreeGiven.has(b.id)) {
+                spreeGiven.delete(b.id);
+                vibrate(10);
+              } else {
+                spreeGiven.add(b.id);
+                vibrate([18, 50, 22]);
+              }
+              saveSpreeGiven(spreeGiven);
+              openList("spree");
+            });
+          }
           burdenListEl.appendChild(card);
         });
       }
