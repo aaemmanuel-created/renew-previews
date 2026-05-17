@@ -115,19 +115,31 @@
         justify-content: center;
         align-items: flex-start;
       }
-      .menu-eyebrow {
-        font-size: 0.66rem;
+      .brand {
+        position: absolute;
+        top: max(1.4rem, env(safe-area-inset-top));
+        left: 1.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.05rem;
+      }
+      .brand-name {
+        font-family: var(--font-mono);
+        font-size: clamp(1.7rem, 6.4vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        color: var(--fg);
+        text-transform: uppercase;
+      }
+      .brand-tag {
+        margin-top: 0.15rem;
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
         font-weight: 500;
-        letter-spacing: 0.3em;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
-      }
-      .menu-greet {
-        margin-top: 0.4rem;
-        font-size: 1.15rem;
-        font-weight: 400;
-        letter-spacing: -0.005em;
-        color: var(--fg);
       }
       .menu-list {
         display: flex;
@@ -743,16 +755,14 @@
 
       <!-- Screen 2: 3-title menu -->
       <section id="screen-menu" class="screen">
-        <div>
-          <div>
-            <span class="menu-eyebrow">BURDEN by PVA</span>
-            <div class="menu-greet">Welcome back</div>
-          </div>
-          <div class="menu-list">
-            <button class="menu-item" data-list="weekly">Burden of the Week</button>
-            <button class="menu-item" data-list="burden">Burdens</button>
-            <button class="menu-item" data-list="spree">Spree</button>
-          </div>
+        <div class="brand">
+          <span class="brand-name">BURDEN</span>
+          <span class="brand-tag">by PVA</span>
+        </div>
+        <div class="menu-list">
+          <button class="menu-item" data-list="weekly">Burden of the Week</button>
+          <button class="menu-item" data-list="burden">Burdens</button>
+          <button class="menu-item" data-list="spree">Spree</button>
         </div>
       </section>
 
