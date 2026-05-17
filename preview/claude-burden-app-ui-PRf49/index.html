@@ -96,10 +96,10 @@
         font-family: var(--font-helvetica);
         font-weight: 300;
         letter-spacing: -0.015em;
-        line-height: 1.12;
+        line-height: 1.18;
         color: var(--fg);
-        font-size: clamp(1.9rem, 8vw, 3.6rem);
-        max-width: 16ch;
+        font-size: clamp(1.45rem, 6vw, 2.5rem);
+        max-width: 18ch;
         opacity: 0;
         filter: blur(22px);
         transform: translateY(10px);
@@ -134,7 +134,8 @@
       .brand {
         position: absolute;
         top: max(1.4rem, env(safe-area-inset-top));
-        left: 1.75rem;
+        /* Aligns to the left edge of the menu-item text (section padding 1.75rem + .menu-item padding 0.4rem). */
+        left: 2.15rem;
         display: flex;
         flex-direction: column;
         gap: 0.05rem;
@@ -288,37 +289,28 @@
           0 1px 0 rgba(255,255,255,0.55) inset,
           0 12px 26px -20px rgba(20,40,90,0.45);
       }
-      .burden-card-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 1rem;
-      }
-      .burden-card-church {
-        font-size: 0.6rem;
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.72);
-      }
-      .burden-card-tag {
-        font-size: 0.58rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.92);
-      }
+      /* New card content order: title → organisation/location → objective → progress. */
       .burden-card-name {
-        margin-top: 0.45rem;
-        font-size: 1rem;
+        font-family: var(--font-mono);
+        font-size: 1.05rem;
         font-weight: 600;
-        letter-spacing: -0.003em;
-        line-height: 1.25;
+        letter-spacing: -0.005em;
+        line-height: 1.22;
         color: #ffffff;
       }
-      .burden-card-objective {
+      .burden-card-church {
+        display: block;
         margin-top: 0.45rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.78);
+      }
+      .burden-card-objective {
+        margin-top: 0.6rem;
         font-size: 0.82rem;
         line-height: 1.45;
-        color: rgba(255,255,255,0.88);
+        color: rgba(255,255,255,0.9);
         font-weight: 400;
       }
       .burden-card-progress { margin-top: 0.95rem; }
@@ -347,19 +339,44 @@
         color: rgba(255,255,255,0.7);
       }
 
-      /* Featured (Burden of the Week) variant — slightly brighter blue. */
+      /* Featured (Burden of the Week) — deep saturated blue, glow halo, fills the screen. */
       .burden-card.featured {
         background:
-          linear-gradient(180deg, rgba(125,170,255,0.62) 0%, rgba(40,90,210,0.5) 100%);
-        border: 1px solid rgba(255,255,255,0.6);
+          linear-gradient(180deg, rgba(50,95,200,0.92) 0%, rgba(15,35,110,0.88) 100%);
+        border: 1px solid rgba(180,210,255,0.4);
+        padding: 1.65rem 1.5rem 1.5rem;
+        min-height: min(60vh, 30rem);
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.35) inset,
+          0 0 0 1px rgba(120,165,255,0.18),
+          0 0 60px rgba(80,135,235,0.42),
+          0 0 120px rgba(60,120,220,0.28),
+          0 30px 50px -25px rgba(20,40,90,0.55);
       }
+      /* Title in the featured tile is Helvetica; everything else stays JetBrains Mono. */
+      .burden-card.featured .burden-card-name {
+        font-family: var(--font-helvetica);
+        font-weight: 500;
+        font-size: clamp(1.4rem, 5.4vw, 1.95rem);
+        letter-spacing: -0.01em;
+        line-height: 1.18;
+      }
+      .burden-card.featured .burden-card-church { margin-top: 0.75rem; font-size: 0.66rem; }
+      .burden-card.featured .burden-card-objective { margin-top: 0.95rem; font-size: 0.92rem; }
+      .burden-card.featured .burden-card-progress { margin-top: auto; padding-top: 1.25rem; }
       .featured-flag {
         display: inline-block;
-        font-size: 0.58rem;
-        letter-spacing: 0.24em;
+        font-size: 0.6rem;
+        letter-spacing: 0.26em;
         text-transform: uppercase;
-        color: #ffffff;
-        margin-bottom: 0.5rem;
+        color: rgba(255,255,255,0.92);
+        margin-bottom: 0.85rem;
+        padding: 0.22rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.35);
       }
       /* Fully funded burdens — softer, marked done. */
       .burden-card.funded {
@@ -508,11 +525,17 @@
         font-family: var(--font-mono);
         font-size: 0.78rem;
         line-height: 1.45;
-        color: rgba(255,255,255,0.88);
+        color: rgba(255,255,255,0.9);
         flex: 1;
       }
+      .spree-tile-progress { margin-top: 0.6rem; }
+      .spree-tile-progress .progress-bar { background: rgba(255,255,255,0.22); }
+      .spree-tile-progress .progress-bar > span {
+        background: linear-gradient(90deg, #ffffff, #d8e7ff);
+        box-shadow: 0 0 8px rgba(255,255,255,0.55);
+      }
       .spree-tile-foot {
-        margin-top: 0.6rem;
+        margin-top: 0.55rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -596,34 +619,23 @@
       }
       .tile:active { transform: scale(0.99); }
 
-      .tile-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 1rem;
-      }
-      .tile-church {
-        font-family: var(--font-mono);
-        font-size: 0.62rem;
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.72);
-      }
-      .tile-tag {
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.92);
-      }
+      /* Tile content order matches the burden-card: title → church → body → progress. */
       .tile-name {
-        margin-top: 0.6rem;
         font-family: var(--font-mono);
         font-size: 1.15rem;
         font-weight: 700;
         letter-spacing: -0.005em;
         line-height: 1.2;
         color: #ffffff;
+      }
+      .tile-church {
+        display: block;
+        margin-top: 0.55rem;
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.78);
       }
       .tile-body {
         margin-top: 0.75rem;
@@ -1347,7 +1359,7 @@
         weekly: {
           eyebrow: "This Week",
           title: "Burden of the Week",
-          subtitle: "Pick the burden you want to carry before the Lord.",
+          subtitle: "",
           filter: (b) => b.featured === true,
         },
         burden: {
@@ -1379,6 +1391,7 @@
         listEyebrowEl.textContent = cfg.eyebrow;
         listTitleEl.textContent = cfg.title;
         listSubtitleEl.textContent = cfg.subtitle;
+        listSubtitleEl.style.display = cfg.subtitle ? "" : "none";
         listSubTitle.textContent = cfg.title;
         renderListExtras(key);
         renderBurdenList(BURDENS.filter(cfg.filter));
@@ -1420,10 +1433,14 @@
           tile.className = "spree-tile" + (reached ? " funded" : "");
           tile.setAttribute("role", "button");
           tile.setAttribute("tabindex", "0");
+          const p = pct(b.state.raised, b.state.goal);
           tile.innerHTML = `
-            <span class="burden-card-church">${b.church}</span>
             <h3 class="spree-tile-name">${b.name}</h3>
+            <span class="burden-card-church">${b.church}</span>
             <p class="spree-tile-objective">${b.objective}</p>
+            <div class="spree-tile-progress">
+              <div class="progress-bar"><span style="width:${p}%"></span></div>
+            </div>
             <div class="spree-tile-foot">
               <span class="spree-tile-meta">${fmtMoney(b.state.raised, b.state.currency)} of ${fmtMoney(b.state.goal, b.state.currency)}</span>
               ${reached
@@ -1477,11 +1494,8 @@
           card.innerHTML = `
             ${reached ? `<span class="funded-flag">Goal reached</span>` :
               (b.featured && currentListKey === "weekly" ? `<span class="featured-flag">This Week</span>` : "")}
-            <div class="burden-card-row">
-              <span class="burden-card-church">${b.church}</span>
-              <span class="burden-card-tag">${b.tag}</span>
-            </div>
             <h2 class="burden-card-name">${b.name}</h2>
+            <span class="burden-card-church">${b.church}</span>
             <p class="burden-card-objective">${b.objective}</p>
             <div class="burden-card-progress">
               <div class="progress-bar"><span style="width:${p}%"></span></div>
@@ -1532,11 +1546,8 @@
           tile.className = "tile";
           tile.dataset.id = b.id;
           tile.innerHTML = `
-            <div class="tile-row">
-              <span class="tile-church">${b.church}</span>
-              <span class="tile-tag">${b.tag}</span>
-            </div>
             <h2 class="tile-name">${b.name}</h2>
+            <span class="tile-church">${b.church}</span>
             <div class="tile-body">${b.objective}</div>
             <div class="tile-progress">
               <div class="progress-bar"><span style="width:${p}%"></span></div>
