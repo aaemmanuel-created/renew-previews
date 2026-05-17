@@ -111,8 +111,9 @@
 
       /* ---------- screen 2: 3-title menu ---------- */
       #screen-menu {
-        padding: max(3rem, env(safe-area-inset-top)) 1.5rem max(2rem, env(safe-area-inset-bottom));
-        justify-content: space-between;
+        padding: max(1.5rem, env(safe-area-inset-top)) 1.75rem max(2rem, env(safe-area-inset-bottom));
+        justify-content: center;
+        align-items: flex-start;
       }
       .menu-eyebrow {
         font-size: 0.66rem;
@@ -396,6 +397,140 @@
       }
       .browse-all:active { transform: scale(0.99); opacity: 0.9; }
 
+      /* ---------- screen 3b: swipe deck ---------- */
+      #screen-deck { background: var(--bg); }
+      .deck-area {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 1.25rem;
+      }
+      .deck-area::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 30% 25%, rgba(61,93,181,0.10), transparent 50%),
+          radial-gradient(circle at 75% 80%, rgba(125,163,255,0.06), transparent 55%);
+        pointer-events: none;
+      }
+      .deck {
+        position: relative;
+        width: min(86vw, 360px);
+        height: min(62vh, 540px);
+      }
+      .tile {
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        padding: 1.2rem 1.15rem 1.05rem;
+        display: flex;
+        flex-direction: column;
+        background:
+          linear-gradient(180deg, rgba(26,44,102,0.55) 0%, rgba(11,22,56,0.32) 100%);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(22px) saturate(160%);
+        -webkit-backdrop-filter: blur(22px) saturate(160%);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 32px 60px -22px rgba(0,0,0,0.85),
+          0 0 0 1px rgba(125,163,255,0.04);
+        color: var(--fg);
+        transform-origin: center bottom;
+        will-change: transform, opacity;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: grab;
+        touch-action: none;
+      }
+      .tile:active { cursor: grabbing; }
+      .tile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+      }
+      .tile-church {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .tile-tag {
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .tile-name {
+        margin-top: 0.55rem;
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.005em;
+        line-height: 1.2;
+      }
+      .tile-body {
+        margin-top: 0.7rem;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: rgba(244,246,255,0.88);
+        flex: 1;
+        overflow: hidden;
+      }
+      .tile-progress { margin-top: 0.85rem; }
+      .tile-meta {
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .swipe-tag {
+        position: absolute;
+        top: 1.1rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.7rem;
+        border-radius: 8px;
+        border: 1.5px solid currentColor;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 5;
+      }
+      .swipe-tag.left  { left: 1rem;  color: #ff8a8a; transform: rotate(-12deg); }
+      .swipe-tag.right { right: 1rem; color: #7da3ff; transform: rotate(12deg); }
+      .deck-hint {
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0 0 max(1.25rem, env(safe-area-inset-bottom));
+      }
+      .deck-empty {
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
       /* ---------- screen 4: burden detail ---------- */
       #screen-detail { background: var(--bg); }
       .detail-scroll {
@@ -638,10 +773,23 @@
         </div>
       </section>
 
+      <!-- Screen 3b: burden swipe deck (used for "Burdens") -->
+      <section id="screen-deck" class="screen">
+        <div class="sub-header">
+          <button class="back-btn" data-go="menu">&larr; Back</button>
+          <span class="sub-title">Burdens</span>
+          <span class="sub-spacer"></span>
+        </div>
+        <div class="deck-area">
+          <div class="deck" id="deck"></div>
+        </div>
+        <div class="deck-hint">Swipe · Tap to read</div>
+      </section>
+
       <!-- Screen 4: burden detail -->
       <section id="screen-detail" class="screen">
         <div class="sub-header">
-          <button class="back-btn" data-go="list">&larr; Back</button>
+          <button class="back-btn" id="detail-back-btn">&larr; Back</button>
           <span class="sub-title">Burden</span>
           <span class="sub-spacer"></span>
         </div>
@@ -679,8 +827,12 @@
         intro:   document.getElementById("screen-intro"),
         menu:    document.getElementById("screen-menu"),
         list:    document.getElementById("screen-list"),
+        deck:    document.getElementById("screen-deck"),
         detail:  document.getElementById("screen-detail"),
       };
+      // Tracks which list-style screen ("list" or "deck") opened the detail,
+      // so the detail Back button returns to the right place.
+      let lastListScreen = "list";
       function show(name) {
         Object.entries(screens).forEach(([key, el]) => {
           el.classList.toggle("active", key === name);
@@ -693,6 +845,10 @@
           vibrate(12);
           show(el.dataset.go);
         });
+      });
+      document.getElementById("detail-back-btn").addEventListener("click", () => {
+        vibrate(12);
+        show(lastListScreen);
       });
 
       // ---------- intro fade-in ----------
@@ -1058,6 +1214,7 @@
       function openList(key) {
         const cfg = LIST_CONFIG[key] || LIST_CONFIG.burden;
         currentListKey = key;
+        lastListScreen = "list";
         listEyebrowEl.textContent = cfg.eyebrow;
         listTitleEl.textContent = cfg.title;
         listSubtitleEl.textContent = cfg.subtitle;
@@ -1155,13 +1312,129 @@
         });
       }
 
-      // Wire the 3 menu items to the list screen.
+      // Wire the 3 menu items: "Burdens" → swipe deck, others → list screen.
       document.querySelectorAll("[data-list]").forEach((el) => {
         el.addEventListener("click", () => {
           vibrate(14);
-          openList(el.dataset.list);
+          const key = el.dataset.list;
+          if (key === "burden") openDeck();
+          else openList(key);
         });
       });
+
+      // ---------- burden swipe deck (Hinge-style) ----------
+      const deckEl = document.getElementById("deck");
+
+      function openDeck() {
+        lastListScreen = "deck";
+        buildDeck();
+        show("deck");
+      }
+
+      function buildDeck() {
+        deckEl.innerHTML = "";
+        // Render in reverse so the first burden ends up on top of the stack.
+        BURDENS.slice().reverse().forEach((b) => {
+          const p = pct(b.state.raised, b.state.goal);
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.dataset.id = b.id;
+          tile.innerHTML = `
+            <div class="swipe-tag left">Pass</div>
+            <div class="swipe-tag right">Carry</div>
+            <div class="tile-row">
+              <span class="tile-church">${b.church}</span>
+              <span class="tile-tag">${b.tag}</span>
+            </div>
+            <h2 class="tile-name">${b.name}</h2>
+            <div class="tile-body">${b.objective}</div>
+            <div class="tile-progress">
+              <div class="progress-bar"><span style="width:${p}%"></span></div>
+              <div class="tile-meta">
+                <span>${fmtMoney(b.state.raised, b.state.currency)} of ${fmtMoney(b.state.goal, b.state.currency)}</span>
+                <span>${b.prayer.members} praying</span>
+              </div>
+            </div>
+          `;
+          deckEl.appendChild(tile);
+          attachSwipe(tile, b.id);
+        });
+        layoutStack();
+      }
+
+      function layoutStack() {
+        const tiles = Array.from(deckEl.querySelectorAll(".tile"));
+        // Topmost is the LAST child (rendered last → on top in stacking order).
+        tiles.forEach((t, i) => {
+          const depth = (tiles.length - 1) - i;
+          t.style.transform = `translateY(${depth * 10}px) scale(${1 - depth * 0.04})`;
+          t.style.opacity = depth > 2 ? 0 : 1;
+          t.style.zIndex = i;
+          t.style.pointerEvents = depth === 0 ? "auto" : "none";
+        });
+        if (tiles.length === 0) {
+          deckEl.innerHTML = '<div class="deck-empty">No more burdens.<br/>Come back tomorrow.</div>';
+        }
+      }
+
+      function attachSwipe(tile, id) {
+        let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false, pointerId = null, moved = false;
+        const leftTag = tile.querySelector(".swipe-tag.left");
+        const rightTag = tile.querySelector(".swipe-tag.right");
+
+        const onDown = (e) => {
+          const tiles = Array.from(deckEl.querySelectorAll(".tile"));
+          if (tiles[tiles.length - 1] !== tile) return;
+          dragging = true;
+          moved = false;
+          pointerId = e.pointerId;
+          startX = e.clientX; startY = e.clientY;
+          tile.setPointerCapture?.(pointerId);
+          tile.style.transition = "none";
+          vibrate(6);
+        };
+        const onMove = (e) => {
+          if (!dragging || e.pointerId !== pointerId) return;
+          dx = e.clientX - startX;
+          dy = e.clientY - startY;
+          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+          const rot = dx / 18;
+          tile.style.transform = `translate(${dx}px, ${dy * 0.4}px) rotate(${rot}deg)`;
+          const mag = Math.min(Math.abs(dx) / 120, 1);
+          if (dx > 0) { rightTag.style.opacity = mag; leftTag.style.opacity = 0; }
+          else if (dx < 0) { leftTag.style.opacity = mag; rightTag.style.opacity = 0; }
+          else { leftTag.style.opacity = 0; rightTag.style.opacity = 0; }
+        };
+        const onUp = (e) => {
+          if (!dragging || e.pointerId !== pointerId) return;
+          dragging = false;
+          tile.releasePointerCapture?.(pointerId);
+          const threshold = 110;
+          tile.style.transition = "transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease";
+          if (Math.abs(dx) > threshold) {
+            const dir = dx > 0 ? 1 : -1;
+            tile.style.transform = `translate(${dir * 700}px, ${dy + dir * 80}px) rotate(${dir * 30}deg)`;
+            tile.style.opacity = "0";
+            vibrate(dir > 0 ? [14, 40, 20] : 18);
+            setTimeout(() => { tile.remove(); layoutStack(); }, 320);
+          } else if (!moved) {
+            // Treat as a tap → open detail.
+            tile.style.transform = "";
+            leftTag.style.opacity = 0; rightTag.style.opacity = 0;
+            vibrate(14);
+            openBurden(id);
+          } else {
+            tile.style.transform = "";
+            leftTag.style.opacity = 0; rightTag.style.opacity = 0;
+          }
+          dx = 0; dy = 0;
+        };
+
+        tile.addEventListener("pointerdown", onDown);
+        tile.addEventListener("pointermove", onMove);
+        tile.addEventListener("pointerup", onUp);
+        tile.addEventListener("pointercancel", onUp);
+      }
 
       // ---------- burden detail ----------
       const detailScroll = document.getElementById("detail-scroll");
